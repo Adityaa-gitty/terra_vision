@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terra Vision | System Health Evaluation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .navbar-custom {
+            background: rgba(15, 23, 42, 0.98);
+            border-bottom: 2px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .wrapper-center {
+            padding: 3rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .questionnaire-card {
+            background: rgba(15, 23, 42, 0.98);
+            border: 2px solid rgba(245, 158, 11, 0.6);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+            width: 100%;
+            max-width: 750px;
+            padding: 3rem;
+        }
+
+        .form-label {
+            color: #f8fafc;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .form-select {
+            background: rgba(30, 41, 59, 1);
+            border: 2px solid #64748b;
+            color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 0.85rem 1rem;
+            font-weight: 600;
+        }
+
+        .form-select:focus {
+            background: rgba(30, 41, 59, 1);
+            border-color: #f59e0b;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+        }
+
+        .question-box {
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .coordinate-badge {
+            background-color: #1e293b !important;
+            border: 2px solid #f59e0b !important;
+            color: #f59e0b !important;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 0.85rem 1.2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .btn-analyze {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #030712;
+            font-weight: 800;
+            border: none;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-analyze:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.7);
+            color: #030712;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark navbar-custom px-4 py-3">
+        <a class="navbar-brand fw-extrabold text-warning tracking-wider" href="#">TERRA VISION 🩺</a>
+        <span class="text-light fw-bold small">System Automated Health & Fitness Diagnosis</span>
+    </nav>
+
+    <div class="wrapper-center">
+        <div class="questionnaire-card">
+            <h2 class="fw-extrabold text-warning mb-2">Automated Health Evaluation</h2>
+            <p class="text-light mb-4 fs-6">Answer the 5 clinical & physical lifestyle questions below. Our AI system will automatically evaluate your exact fitness score and recommend the safest trails.</p>
+
+            {% if lat and lng %}
+            <div class="coordinate-badge mb-4">
+                📍 Target Coordinates Secured: Latitude {{ lat }}, Longitude {{ lng }}
+            </div>
+            {% elif terrain %}
+            <div class="coordinate-badge mb-4">
+                📸 Terrain Verified: {{ terrain }}
+            </div>
+            {% elif vibe %}
+            <div class="coordinate-badge mb-4">
+                💬 Sentiment Vibe Mapped: {{ vibe }}
+            </div>
+            {% endif %}
+
+            <form action="/recommend-results" method="POST">
+                <input type="hidden" name="lat" value="{{ lat }}">
+                <input type="hidden" name="lng" value="{{ lng }}">
+                <input type="hidden" name="terrain" value="{{ terrain }}">
+                <input type="hidden" name="vibe" value="{{ vibe }}">
+                <input type="hidden" name="max_distance" value="25">
+
+                <div class="question-box">
+                    <label class="form-label mb-2">1. What is your typical weekly physical activity or workout routine?</label>
+                    <select class="form-select" name="q1" required>
+                        <option value="1">Sedentary (No regular exercise / Desk job)</option>
+                        <option value="2">Lightly active (Walking 2-3 times a week)</option>
+                        <option value="3">Moderately active (Regular cardio/gym 4 times a week)</option>
+                        <option value="4">Highly active / Athlete (Intense daily training)</option>
+                    </select>
+                </div>
+
+                <div class="question-box">
+                    <label class="form-label mb-2">2. Do you experience shortness of breath or dizziness when moving to high altitudes?</label>
+                    <select class="form-select" name="q2" required>
+                        <option value="1">Yes, severe altitude sickness history</option>
+                        <option value="2">Mild discomfort sometimes</option>
+                        <option value="3">No issues, adapt very well</option>
+                    </select>
+                </div>
+
+                <div class="question-box">
+                    <label class="form-label mb-2">3. How is your stamina level during continuous uphill climbing?</label>
+                    <select class="form-select" name="q3" required>
+                        <option value="1">Very low (Gets exhausted quickly within 15 mins)</option>
+                        <option value="2">Moderate (Can climb steadily with breaks)</option>
+                        <option value="3">Excellent (High endurance, long hours without exhaustion)</option>
+                    </select>
+                </div>
+
+                <div class="question-box">
+                    <label class="form-label mb-2">4. Do you have any pre-existing chronic medical conditions (e.g., Asthma, High BP, Joint pain)?</label>
+                    <select class="form-select" name="q4" required>
+                        <option value="1">Yes (Serious ongoing condition)</option>
+                        <option value="2">Minor / Managed conditions</option>
+                        <option value="3">No medical conditions at all</option>
+                    </select>
+                </div>
+
+                <div class="question-box">
+                    <label class="form-label mb-2">5. What is your previous trekking or mountaineering experience?</label>
+                    <select class="form-select" name="q5" required>
+                        <option value="1">None (Absolute beginner)</option>
+                        <option value="2">Done 1-2 easy weekend hikes</option>
+                        <option value="3">Experienced trekker with Himalayan experience</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-analyze w-100 mt-2">Let System Calculate Fitness & Recommend Treks ⚡</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

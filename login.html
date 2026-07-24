@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terra Vision | Login</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background-color: #0f172a;
+        }
+
+        /* Fullscreen Video Background Container */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Seamless HD Looping Background Video */
+        .bg-video-overlay {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Cinematic Dark Contrast Overlay for Sharp HD Video Visibility */
+        .cinematic-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 2;
+        }
+
+        /* Left-Aligned Layout Wrapper */
+        .wrapper-center {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 6vw;
+            position: relative;
+            z-index: 3;
+        }
+
+        /* Premium Dark Glassmorphic Card */
+        .cinematic-card {
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 1.75rem;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 440px;
+            padding: 2.5rem;
+            position: relative;
+            z-index: 4;
+        }
+
+        .form-label {
+            color: #e2e8f0;
+            font-weight: 700;
+        }
+
+        .form-control {
+            background: rgba(30, 41, 59, 0.85);
+            border: 2px solid #475569;
+            color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-control:focus {
+            background: rgba(30, 41, 59, 1);
+            border-color: #ff7e5f;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 126, 95, 0.4);
+        }
+
+        .btn-vibrant {
+            background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+            color: #fff;
+            font-weight: 800;
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.85rem;
+            box-shadow: 0 10px 20px rgba(255, 126, 95, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-vibrant:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(255, 126, 95, 0.6);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic HD Video Background Layout -->
+    <div class="bg-container">
+        <video class="bg-video-overlay" autoplay muted loop playsinline>
+            <source src="{{ url_for('static', filename='video_2026-07-24_00-09-53.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="cinematic-overlay"></div>
+
+    <div class="wrapper-center">
+        <div class="cinematic-card">
+            <h2 class="fw-extrabold text-center mb-1 text-white tracking-wide">TERRA VISION</h2>
+            <p class="text-center small mb-4 fw-bold" style="color: #94a3b8 !important;">Geospatial Trekking Recommender</p>
+            
+            <form action="/login" method="POST">
+                <div class="mb-3">
+                    <label class="form-label small">Email Address</label>
+                    <input type="email" name="email" class="form-control" placeholder="explorer@terra.com" required>
+                </div>
+                
+                <div class="mb-3 position-relative">
+                    <label class="form-label small">Password</label>
+                    <div class="input-group">
+                        <input type="password" name="password" id="passwordField" class="form-control" placeholder="••••••••" required>
+                        <button class="btn btn-outline-light fw-bold" type="button" onclick="togglePassword()">👁</button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-vibrant w-100 mt-2">Login & Enter</button>
+            </form>
+            
+            <div class="text-center mt-4">
+                <small class="fw-bold" style="color: #94a3b8 !important;">New explorer? <a href="/signup" class="fw-extrabold text-decoration-none" style="color: #ff7e5f !important;">Sign Up</a></small>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const pwd = document.getElementById('passwordField');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+            } else {
+                pwd.type = 'password';
+            }
+        }
+    </script>
+</body>
+</html>

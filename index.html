@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terra Vision | Geospatial & Predictive Trekking Recommender</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            min-height: 100vh;
+        }
+
+        /* Navbar Custom Styling */
+        .navbar-custom {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            border-bottom: 2px solid rgba(245, 158, 11, 0.3);
+        }
+
+        /* Glassmorphic Cards Matching the Theme */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 1.25rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 158, 11, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(245, 158, 11, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 158, 11, 0.2);
+        }
+
+        /* Vibrant Gold/Amber Glowing Buttons */
+        .btn-glow {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #030712;
+            font-weight: 800;
+            border: none;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(245, 158, 11, 0.5);
+            color: #030712;
+        }
+
+        /* Form Controls */
+        .form-control, .form-select {
+            background: rgba(30, 41, 59, 0.85);
+            border: 2px solid #475569;
+            color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(30, 41, 59, 1);
+            border-color: #f59e0b;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Results & Lists */
+        .list-group-item {
+            background-color: rgba(30, 41, 59, 0.9) !important;
+            border-color: rgba(245, 158, 11, 0.3) !important;
+            color: #ffffff !important;
+            border-radius: 0.75rem !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark navbar-custom px-4 mb-5 py-3">
+        <div class="container-fluid">
+            <span class="navbar-brand fw-extrabold fs-3 text-warning tracking-wider">TERRA VISION ⚡</span>
+            <div class="d-flex align-items: center;">
+                <span class="text-secondary small me-3 fw-bold">Welcome, Explorer</span>
+                <a href="/india-map" class="btn btn-sm btn-outline-warning fw-bold me-2">🗺️ Map</a>
+                <a href="/logout" class="btn btn-outline-danger btn-sm fw-bold">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container pb-5">
+        <div class="row g-4">
+            <!-- 1. Smart Trek Recommender -->
+            <div class="col-lg-6">
+                <div class="glass-card p-4 h-100">
+                    <h3 class="h4 mb-2 text-warning fw-bold">🧭 Smart Trek Recommender</h3>
+                    <p class="text-secondary small mb-4">Matches your fitness profile and range preferences with database trail metrics.</p>
+                    <div class="mb-3">
+                        <label class="form-label text-light small fw-bold">Fitness Score (1-10)</label>
+                        <input type="number" id="fitnessScore" class="form-control" value="7" min="1" max="10">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-light small fw-bold">Max Distance (km)</label>
+                        <input type="number" id="maxDistance" class="form-control" value="45">
+                    </div>
+                    <button class="btn btn-glow w-100 py-2" onclick="fetchRecommendations()">Find Trails 🚀</button>
+                    
+                    <div id="recommendationResults" class="mt-4"></div>
+                </div>
+            </div>
+
+            <!-- 2. Terrain Vision Module (CNN) -->
+            <div class="col-lg-6">
+                <div class="glass-card p-4 h-100">
+                    <h3 class="h4 mb-2 text-warning fw-bold">📸 Terrain Vision Module (CNN)</h3>
+                    <p class="text-secondary small mb-4">Upload trail photographs to categorize terrain types (Rocky, Forest, Snow, Steep Slope).</p>
+                    <div class="mb-3">
+                        <label class="form-label text-light small fw-bold">Upload Trail Image</label>
+                        <input type="file" id="terrainImage" class="form-control">
+                    </div>
+                    <button class="btn btn-glow w-100 py-2" onclick="classifyTerrain()">Analyze Terrain 🔍</button>
+                    
+                    <div id="visionResults" class="mt-4"></div>
+                </div>
+            </div>
+
+            <!-- 3. Geospatial Analytics Chart -->
+            <div class="col-lg-6">
+                <div class="glass-card p-4 h-100">
+                    <h3 class="h4 mb-2 text-warning fw-bold">📈 Geospatial Analytics Chart</h3>
+                    <p class="text-secondary small mb-4">Visualizes elevation gain against trail distance across difficulty categories.</p>
+                    <button class="btn btn-glow w-100 py-2 mb-3" onclick="loadAnalyticsChart()">Generate Chart 📊</button>
+                    <div id="chartContainer" class="text-center"></div>
+                </div>
+            </div>
+
+            <!-- 4. Trail Review Sentiment Analyzer -->
+            <div class="col-lg-6">
+                <div class="glass-card p-4 h-100">
+                    <h3 class="h4 mb-2 text-warning fw-bold">💬 Trail Review Sentiment Analyzer</h3>
+                    <p class="text-secondary small mb-4">Analyze visitor feedback polarity using NLP text vectorization.</p>
+                    <div class="mb-3">
+                        <textarea id="reviewText" class="form-control" rows="3" placeholder="Enter trail review or visitor feedback here..."></textarea>
+                    </div>
+                    <button class="btn btn-glow w-100 py-2" onclick="analyzeSentiment()">Analyze Sentiment ⚡</button>
+                    
+                    <div id="sentimentResults" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Original JavaScript Functions Fully Intact -->
+    <script>
+        async function fetchRecommendations() {
+            const fitness = document.getElementById('fitnessScore').value;
+            const max_distance = document.getElementById('maxDistance').value;
+            
+            try {
+                const res = await fetch('/api/recommend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fitness_score: fitness, max_distance: max_distance })
+                });
+                const data = await res.json();
+                
+                let html = '<div class="list-group bg-transparent">';
+                if(data.recommendations && data.recommendations.length > 0) {
+                    data.recommendations.forEach(t => {
+                        html += `<div class="list-group-item mb-2 rounded p-3 shadow">
+                            <strong class="text-warning">${t.trail_name}</strong> (${t.location})<br>
+                            <small class="text-secondary">Distance: ${t.distance}km | Elevation: ${t.elevation_gain}m | Difficulty: ${t.difficulty}</small>
+                        </div>`;
+                    });
+                } else {
+                    html += '<p class="text-warning small">No trails found matching criteria.</p>';
+                }
+                html += '</div>';
+                document.getElementById('recommendationResults').innerHTML = html;
+            } catch (err) {
+                document.getElementById('recommendationResults').innerHTML = '<p class="text-danger small">Error connecting to recommendation API.</p>';
+            }
+        }
+
+        async function classifyTerrain() {
+            const fileInput = document.getElementById('terrainImage');
+            if(fileInput.files.length === 0) {
+                alert('Please select an image file first.');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const res = await fetch('/api/vision', { method: 'POST', body: formData });
+                const data = await res.json();
+                
+                if(data.terrain) {
+                    document.getElementById('visionResults').innerHTML = `<div class="alert alert-success bg-dark border-success text-light">
+                        Predicted Terrain: <strong class="text-warning">${data.terrain}</strong> (Confidence: ${data.confidence}%)
+                    </div>`;
+                }
+            } catch (err) {
+                document.getElementById('visionResults').innerHTML = `<div class="alert alert-danger small">Error in vision module.</div>`;
+            }
+        }
+
+        async function analyzeSentiment() {
+            const text = document.getElementById('reviewText').value;
+            if(!text) {
+                alert('Please enter some review text.');
+                return;
+            }
+            try {
+                const res = await fetch('/api/sentiment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+                const data = await res.json();
+                
+                if(data.sentiment) {
+                    document.getElementById('sentimentResults').innerHTML = `<div class="p-3 bg-dark border border-warning rounded">
+                        Sentiment Polarity: <span class="text-warning fw-bold">${data.sentiment}</span> (${data.confidence}% confidence)
+                    </div>`;
+                }
+            } catch (err) {
+                document.getElementById('sentimentResults').innerHTML = `<div class="text-danger small">Error in sentiment module.</div>`;
+            }
+        }
+
+        async function loadAnalyticsChart() {
+            try {
+                const res = await fetch('/api/analytics-chart');
+                const data = await res.json();
+                if(data.status === 'success' && data.chart) {
+                    document.getElementById('chartContainer').innerHTML = `<img src="data:image/png;base64,${data.chart}" class="img-fluid rounded border border-warning shadow-lg mt-2">`;
+                } else {
+                    document.getElementById('chartContainer').innerHTML = `<p class="text-warning small mt-2">Chart data not available.</p>`;
+                }
+            } catch (err) {
+                document.getElementById('chartContainer').innerHTML = `<p class="text-danger small mt-2">Failed to load analytics chart.</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

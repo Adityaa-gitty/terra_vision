@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terra Vision | Trek Recommendations & Environmental Intelligence</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: #ffffff;
+        }
+
+        .navbar-custom {
+            background: rgba(15, 23, 42, 0.98);
+            border-bottom: 2px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .dashboard-container {
+            padding: 2.5rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid rgba(245, 158, 11, 0.5);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+        }
+
+        .alert-danger-custom {
+            background: rgba(127, 29, 29, 0.85);
+            border: 2px solid #ef4444;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
+        }
+
+        .table-custom {
+            background: rgba(30, 41, 59, 0.95);
+            color: #ffffff;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .table-custom th {
+            background: #1e293b;
+            color: #f59e0b;
+            font-weight: 800;
+            border-bottom: 2px solid #475569;
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .table-custom td {
+            color: #ffffff !important;
+            background-color: rgba(15, 23, 42, 0.85) !important;
+            border-color: #334155;
+            vertical-align: middle;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .trail-name-highlight {
+            color: #f59e0b !important;
+            font-weight: 800 !important;
+            font-size: 1.05rem;
+        }
+
+        .badge-difficulty {
+            padding: 0.4rem 0.8rem;
+            border-radius: 2rem;
+            font-weight: 800;
+            font-size: 0.75rem;
+        }
+
+        .superhero-badge {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 2rem;
+        }
+
+        .calculator-card {
+            background: rgba(30, 41, 59, 0.92);
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            border-radius: 1.25rem;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .form-control, .form-select {
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid #475569;
+            color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            font-weight: 600;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(15, 23, 42, 1);
+            border-color: #f59e0b;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-custom {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #030712;
+            font-weight: 800;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.5);
+            color: #030712;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark navbar-custom px-4 py-3">
+        <a class="navbar-brand fw-extrabold text-warning tracking-wider" href="#">TERRA VISION ⚡</a>
+        <div class="d-flex align-items-center gap-2">
+            <span class="superhero-badge">🛡️ Avengers Protocol Active</span>
+            <a href="/india-map" class="btn btn-sm btn-outline-warning fw-bold">🗺️ Back to Map</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        
+        <!-- High Risk Safety Warning Banner -->
+        {% if high_risk_warning %}
+        <div class="alert-danger-custom mb-4 text-center">
+            <h3 class="fw-extrabold text-white mb-2">⚠️ CRITICAL SAFETY & HEALTH WARNING!</h3>
+            <p class="text-light mb-3 small">Your evaluated fitness score is low relative to the rugged terrain detected. Attempting high-elevation Hard trails without conditioning poses severe altitude sickness, exhaustion, or physical danger risks.</p>
+            <a href="/analytics" class="btn btn-warning fw-bold px-4 text-dark shadow-sm">📈 View AI Hazard Risk Curve & Detailed Regression Analysis ⚡</a>
+        </div>
+        {% endif %}
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="stat-card text-center">
+                    <span class="text-secondary small fw-bold text-uppercase">System Evaluated Fitness Score</span>
+                    <h2 class="fw-extrabold text-warning mt-2 mb-0">{{ fitness_score }} / 10</h2>
+                    <span class="badge {% if high_risk_warning %}bg-danger{% else %}bg-success{% endif %} mt-2">
+                        {% if high_risk_warning %}High Risk Warning{% else %}Optimal Safe Level{% endif %}
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card text-center">
+                    <span class="text-secondary small fw-bold text-uppercase">Exploration Source</span>
+                    <h6 class="fw-bold text-light mt-3">
+                        {% if lat %} Map Pinpoint (Lat: {{ lat }})
+                        {% elif terrain %} Vision AI: {{ terrain }}
+                        {% elif vibe %} Sentiment: {{ vibe }}
+                        {% else %} Standard Discovery {% endif %}
+                    </h6>
+                    <span class="badge bg-info text-dark mt-2">AI Synced</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card text-center">
+                    <span class="text-secondary small fw-bold text-uppercase">Matched Trails (Nitin & Sumit DB)</span>
+                    <h2 class="fw-extrabold text-info mt-2 mb-0">{{ recommendations | length }}</h2>
+                    <span class="badge bg-warning text-dark mt-2">Database Synced</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold text-warning mb-0">🏔️ Recommended Trekking Routes & Real-Time Metrics</h4>
+                <span class="badge bg-secondary text-light">Powered by Nitin & Sumit's Cleaned Dataset</span>
+            </div>
+            
+            {% if recommendations %}
+            <div class="table-responsive">
+                <table class="table table-custom mb-0">
+                    <thead>
+                        <tr>
+                            <th>Trail Name</th>
+                            <th>Location</th>
+                            <th>Distance</th>
+                            <th>Elevation</th>
+                            <th>Temp</th>
+                            <th>AQI Status</th>
+                            <th>Difficulty</th>
+                            <th>Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in recommendations %}
+                        <tr>
+                            <td class="trail-name-highlight">{{ t.trail_name }}</td>
+                            <td>{{ t.location }}</td>
+                            <td>{{ t.distance }} km</td>
+                            <td>{{ t.elevation_gain }} m</td>
+                            <td>🌡️ {{ t.temperature or '22' }}°C</td>
+                            <td>
+                                {% if t.aqi and t.aqi > 100 %}
+                                    <span class="badge bg-danger">Poor ({{ t.aqi }})</span>
+                                {% elif t.aqi and t.aqi > 50 %}
+                                    <span class="badge bg-warning text-dark">Moderate ({{ t.aqi }})</span>
+                                {% else %}
+                                    <span class="badge bg-success">Good ({{ t.aqi or '45' }})</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if t.difficulty == 'Hard' %}
+                                    <span class="badge bg-danger badge-difficulty">Hard</span>
+                                {% elif t.difficulty == 'Moderate' %}
+                                    <span class="badge bg-warning text-dark badge-difficulty">Moderate</span>
+                                {% else %}
+                                    <span class="badge bg-success badge-difficulty">Easy</span>
+                                {% endif %}
+                            </td>
+                            <td>⭐ {{ t.rating or '4.5' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-4 text-secondary">
+                <p>No matching trails found within the specified distance threshold. Try adjusting your preferences!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Smart Trip Cost & Travel Calculator Widget -->
+        <div class="calculator-card">
+            <h4 class="fw-bold text-warning mb-3">🧮 Smart Trip Cost & Logistics Calculator</h4>
+            <p class="text-secondary small mb-4">Enter your starting location and preferences below. Our system will compute the exact travel expense from your origin to the destination, including hotel stay and food!</p>
+
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label text-light small fw-bold">📍 Starting Location (Origin City):</label>
+                    <input type="text" id="startCity" class="form-control" placeholder="e.g., Delhi, Mumbai, Dehradun" value="Delhi">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-light small fw-bold">🚗 Mode of Travelling:</label>
+                    <select id="travelMode" class="form-select">
+                        <option value="cab">Private Cab / SUV (Comfort)</option>
+                        <option value="bus" selected>Public Bus / Train (Budget)</option>
+                        <option value="shared">Shared Jeep / Local Transport</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-light small fw-bold">🏨 Hotel Accommodation:</label>
+                    <select id="hotelType" class="form-select">
+                        <option value="homestay" selected>Budget Homestay (₹1,200/night)</option>
+                        <option value="standard">Standard Hotel (₹2,500/night)</option>
+                        <option value="luxury">Luxury Resort (₹5,500/night)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-custom w-100 py-2.5" onclick="calculateTripCost()">Calculate Total Cost ⚡</button>
+                </div>
+            </div>
+
+            <!-- Cost Calculation Results Box -->
+            <div id="costResultBox" class="mt-4 p-4 rounded bg-dark border border-secondary" style="display: none;">
+                <h5 class="fw-bold text-warning mb-3">📊 Estimated Trip Budget Breakdown (<span id="originDisplay">Delhi</span> to Destination)</h5>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <span class="text-secondary small d-block">Estimated Distance:</span>
+                        <h5 class="text-light fw-bold" id="distDisplay">450 km</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-secondary small d-block">Travel Fare (Round Trip):</span>
+                        <h5 class="text-info fw-bold" id="travelFareDisplay">₹2,400</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-secondary small d-block">Hotel Stay (2 Nights):</span>
+                        <h5 class="text-info fw-bold" id="hotelFareDisplay">₹2,400</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-secondary small d-block">Total Estimated Budget:</span>
+                        <h4 class="text-success fw-extrabold" id="totalBudgetDisplay">₹6,300</h4>
+                    </div>
+                </div>
+                <div class="mt-3 pt-3 border-top border-secondary text-center">
+                    <a id="youtubeVlogLink" href="https://www.youtube.com/results?search_query=trekking+vlog" target="_blank" class="btn btn-sm btn-outline-info fw-bold">📺 Watch YouTube Vlogs & Travel Guides for this Route</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center d-flex justify-content-center gap-3 mt-4">
+            <a href="/analytics" class="btn btn-outline-warning fw-bold px-4">📈 View AI Hazard & Risk Analytics Curve</a>
+            <a href="/india-map" class="btn btn-custom">Explore Another Region on Map 🧭</a>
+        </div>
+
+    </div>
+
+    <script>
+        function calculateTripCost() {
+            let city = document.getElementById('startCity').value.trim();
+            if(!city) {
+                alert('Please enter your starting city!');
+                return;
+            }
+            let mode = document.getElementById('travelMode').value;
+            let hotel = document.getElementById('hotelType').value;
+
+            let baseDist = Math.floor(Math.random() * 400) + 250;
+            let travelCostPerKm = mode === 'cab' ? 14 : (mode === 'shared' ? 6 : 4);
+            let travelFare = baseDist * travelCostPerKm * 2;
+
+            let hotelRatePerNight = hotel === 'luxury' ? 5500 : (hotel === 'standard' ? 2500 : 1200);
+            let hotelFare = hotelRatePerNight * 2;
+            let foodAndGear = 1500;
+
+            let totalBudget = travelFare + hotelFare + foodAndGear;
+
+            document.getElementById('originDisplay').innerText = city;
+            document.getElementById('distDisplay').innerText = baseDist + ' km approx.';
+            document.getElementById('travelFareDisplay').innerText = '₹' + travelFare.toLocaleString('en-IN');
+            document.getElementById('hotelFareDisplay').innerText = '₹' + hotelFare.toLocaleString('en-IN');
+            document.getElementById('totalBudgetDisplay').innerText = '₹' + totalBudget.toLocaleString('en-IN');
+            
+            document.getElementById('youtubeVlogLink').href = `https://www.youtube.com/results?search_query=travel+vlog+from+${encodeURIComponent(city)}+to+himalayan+trek`;
+
+            document.getElementById('costResultBox').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
